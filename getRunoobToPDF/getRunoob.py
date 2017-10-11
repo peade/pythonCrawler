@@ -57,16 +57,17 @@ def getUrlList():
     获取所有URL目录列表
     :return:
     """
-    response = requests.get("http://www.runoob.com/bootstrap/bootstrap-tutorial.html")
+    response = requests.get("http://www.runoob.com/htmldom/htmldom-methods.html")
     soup = BeautifulSoup(response.content, "html.parser")
     menu_tag = soup.find_all(class_="design")[0]
     urls = []
     for a in menu_tag.find_all("a"):
         aUrl = a.get('href')
-
-        if aUrl.startswith('/bootstrap'):
-            url = "http://www.runoob.com" + aUrl
-            urls.append(url)
+        url = "http://www.runoob.com" + aUrl
+        urls.append(url)
+        # if aUrl.startswith('/htmldom'):
+        #     url = "http://www.runoob.com" + aUrl
+        #     urls.append(url)
 
     return urls
 
@@ -100,7 +101,7 @@ def save_pdf(htmls, file_name):
 def main():
     start = time.time()
     urls = getUrlList()
-    file_name = u"runoob_Bootstrap.pdf"
+    file_name = u"htmlDom.pdf"
     htmls = [url_to_html(url, str(index) + ".html") for index, url in enumerate(urls)]
     save_pdf(htmls, file_name)
 
