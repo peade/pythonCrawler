@@ -96,7 +96,7 @@ def save_pdf(htmls, file_name):
          'outline-depth': 10
     }
     # linux下单独配置 wkhtmltopdf  安装wkhtmlpdf为*not* using wkhtmltopdf patched qt.
-
+    # 从官网下载 wkhtmltopdf 解压到本地文件夹，配置进去
     config=pdfkit.configuration(wkhtmltopdf='/home/lhf/programmes/wkhtmltox/bin/wkhtmltopdf')
     pdfkit.from_file(htmls, file_name, options=options, configuration=config)
 
