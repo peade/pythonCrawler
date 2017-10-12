@@ -93,10 +93,15 @@ def save_pdf(htmls, file_name):
             ('cookie-name1', 'cookie-value1'),
             ('cookie-name2', 'cookie-value2'),
         ],
-        'outline-depth': 10,
+         'outline-depth': 10
     }
-    pdfkit.from_file(htmls, file_name, options=options)
+    # linux下单独配置 wkhtmltopdf  安装wkhtmlpdf为*not* using wkhtmltopdf patched qt.
 
+    config=pdfkit.configuration(wkhtmltopdf='/home/lhf/programmes/wkhtmltox/bin/wkhtmltopdf')
+    pdfkit.from_file(htmls, file_name, options=options, configuration=config)
+
+    # 安装wkhtmltopdf using patched qt 成功时用
+   # pdfkit.from_file(htmls, file_name, options=options)
 
 def main():
     start = time.time()
