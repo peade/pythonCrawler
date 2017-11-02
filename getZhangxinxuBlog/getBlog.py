@@ -29,20 +29,21 @@ def url_to_html(url, name):
     try:
         res = requests.get(url)
         soup = BeautifulSoup(res.content, 'html5lib')
-        body = soup.find_all(class_="article-intro")[0]
+        body = soup.find_all(class_="post")[0]
         html = str(body)
 
-        def func(m):
-            if not m.group(2).startswith("http"):
-                rtn = m.group(1) + "http://www.runoob.com" + m.group(2) + m.group(3)
-                return rtn
-            else:
-                return m.group(1) + m.group(2) + m.group(3)
-                # body中的img标签的src相对路径的改成绝对路径
+        # def func(m):
+        #     if not m.group(2).startswith("http"):
+        #         rtn = m.group(1) + "http://www.runoob.com" + m.group(2) + m.group(3)
+        #         return rtn
+        #     else:
+        #         return m.group(1) + m.group(2) + m.group(3)
+        #         # body中的img标签的src相对路径的改成绝对路径
+        #
+        # pattern = "(<img .*?src=\")(.*?)(\")"
 
-        pattern = "(<img .*?src=\")(.*?)(\")"
-
-        html = re.compile(pattern).sub(func, html)
+        #html = re.compile(pattern).sub(func, html)
+        # html = re.compile(pattern)
         html = htmlTpl.format(content=html)
         html = html.encode("utf-8")
         with open(name, 'wb') as f:
@@ -57,17 +58,29 @@ def getUrlList():
     获取所有URL目录列表
     :return:
     """
-    response = requests.get("http://www.runoob.com/htmldom/htmldom-tutorial.html")
-    soup = BeautifulSoup(response.content, "html.parser")
-    menu_tag = soup.find_all(class_="design")[0]
     urls = []
-    for a in menu_tag.find_all("a"):
-        aUrl = a.get('href')
-        # url = "http://www.runoob.com" + aUrl
-        # urls.append(url)
-        if aUrl.startswith('/htmldom'):
-            url = "http://www.runoob.com" + aUrl
-        urls.append(url)
+    for pageNum in range(1, 56):
+        response = requests.get("http://www.zhangxinxu.com/wordpress/page/" + str(pageNum) + '/')
+        soup = BeautifulSoup(response.content, "html.parser")
+        # print(soup)
+        aList = soup.find_all(class_="entry-title")
+        # print(aList)
+        for a in aList:
+            url = a.get('href')
+            urls.append(url)
+            # print(url)
+
+            # response = requests.get("http://www.runoob.com/htmldom/htmldom-tutorial.html")
+            # soup = BeautifulSoup(response.content, "html.parser")
+            # menu_tag = soup.find_all(class_="design")[0]
+            # urls = []
+            # for a in menu_tag.find_all("a"):
+            #     aUrl = a.get('href')
+            #     # url = "http://www.runoob.com" + aUrl
+            #     # urls.append(url)
+            #     if aUrl.startswith('/htmldom'):
+            #         url = "http://www.runoob.com" + aUrl
+            #     urls.append(url)
 
     return urls
 
@@ -107,7 +120,7 @@ def save_pdf(htmls, file_name):
 def main():
     start = time.time()
     urls = getUrlList()
-    file_name = u"jsDom-runoob.pdf"
+    file_name = u"zhangxinxuBlog.pdf"
     htmls = [url_to_html(url, str(index) + ".html") for index, url in enumerate(urls)]
     save_pdf(htmls, file_name)
 
