@@ -51,25 +51,27 @@ def url_to_html(url, name):
     except Exception as e:
         logging.error("解析错误", exc_info=True)
 
-
-def getUrlList():
+urls = []
+def getUrlList(url,starter):
     """
     获取所有URL目录列表
     :return:
     """
-    response = requests.get("http://www.runoob.com/htmldom/htmldom-methods.html")
+    response = requests.get(url)
     soup = BeautifulSoup(response.content, "html.parser")
     menu_tag = soup.find_all(class_="design")[0]
-    urls = []
+    #urls = []
     for a in menu_tag.find_all("a"):
         aUrl = a.get('href')
-        url = "http://www.runoob.com" + aUrl
-        urls.append(url)
-        # if aUrl.startswith('/htmldom'):
-        #     url = "http://www.runoob.com" + aUrl
-        #     urls.append(url)
+        # url = "http://www.runoob.com" + aUrl
+        # urls.append(url)
+        #if aUrl.startswith('/js/'):
+        if aUrl.startswith(starter):
+            url = "http://www.runoob.com" + aUrl
+            urls.append(url)
 
-    return urls
+
+    #return urls
 
 
 def save_pdf(htmls, file_name):
@@ -100,8 +102,10 @@ def save_pdf(htmls, file_name):
 
 def main():
     start = time.time()
-    urls = getUrlList()
-    file_name = u"htmlDom.pdf"
+    #urls = getUrlList()
+    getUrlList('http://www.runoob.com/js/js-tutorial.html', '/js/')
+    getUrlList('http://www.runoob.com/jsref/jsref-tutorial.html', '/jsref/')
+    file_name = u"jsTutorial.pdf"
     htmls = [url_to_html(url, str(index) + ".html") for index, url in enumerate(urls)]
     save_pdf(htmls, file_name)
 
