@@ -42,7 +42,7 @@ def url_to_html(url, name):
         #
         # pattern = "(<img .*?src=\")(.*?)(\")"
 
-        #html = re.compile(pattern).sub(func, html)
+        # html = re.compile(pattern).sub(func, html)
         # html = re.compile(pattern)
         html = htmlTpl.format(content=html)
         html = html.encode("utf-8")
@@ -59,33 +59,35 @@ def getUrlList():
     :return:
     """
     urls = []
-    for pageNum in range(1, 56):
-        response = requests.get("http://www.zhangxinxu.com/wordpress/page/" + str(pageNum) + '/')
+    for pageNum in range(1, 14):
+        response = requests.get("http://www.zhangxinxu.com/wordpress/category/js/page/" + str(pageNum) + '/')
         soup = BeautifulSoup(response.content, "html.parser")
         # print(soup)
-        aList = soup.find_all(class_="entry-title")
-        # print(aList)
-        for a in aList:
-            url = a.get('href')
-            urls.append(url)
-            # print(url)
+        aList = soup.find(class_="post").find_all("a")
+        #print("page" + str(pageNum))
+        #print(aList)
+    for a in aList:
+        url = a.get('href')
+        urls.append(url)
+        print(len(urls))
 
-            # response = requests.get("http://www.runoob.com/htmldom/htmldom-tutorial.html")
-            # soup = BeautifulSoup(response.content, "html.parser")
-            # menu_tag = soup.find_all(class_="design")[0]
-            # urls = []
-            # for a in menu_tag.find_all("a"):
-            #     aUrl = a.get('href')
-            #     # url = "http://www.runoob.com" + aUrl
-            #     # urls.append(url)
-            #     if aUrl.startswith('/htmldom'):
-            #         url = "http://www.runoob.com" + aUrl
-            #     urls.append(url)
+        # response = requests.get("http://www.runoob.com/htmldom/htmldom-tutorial.html")
+        # soup = BeautifulSoup(response.content, "html.parser")
+        # menu_tag = soup.find_all(class_="design")[0]
+        # urls = []
+        # for a in menu_tag.find_all("a"):
+        #     aUrl = a.get('href')
+        #     # url = "http://www.runoob.com" + aUrl
+        #     # urls.append(url)
+        #     if aUrl.startswith('/htmldom'):
+        #         url = "http://www.runoob.com" + aUrl
+        #     urls.append(url)
 
     return urls
 
 
 def save_pdf(htmls, file_name):
+    print(htmls, file_name)
     """
     把所有html文件保存到pdf文件
     :param htmls:  html文件列表
